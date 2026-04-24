@@ -1,65 +1,109 @@
-import Image from "next/image";
+"use client";
+import { getUsers } from "@/API/APi";
+import Loader from "@/components/UI/Loader";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
-export default function Home() {
+function page() {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    fetUser();
+  }, []);
+
+  const fetUser = async () => {
+    setLoading(true);
+    try {
+      const res = await getUsers();
+      if (res?.status == 200) {
+        setData(res?.data);
+        setLoading(false);
+      }
+    } catch (error) {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return <Loader />;
+  }
+
+  if (!data) {
+    return <div>Data not fount</div>;
+  }
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.js file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="min-h-screen">
+      <div className="max-w-5xl mx-auto px-6 py-8">
+        <div className="mb-8">
+          <h1 className="text-xl font-semibold text-gray-900">Dashboard</h1>
+          <p className="text-sm text-gray-400 mt-1">
+            Manage your users from here
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div className="grid grid-cols-3 gap-4 mb-8">
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+            <p className="text-xs text-gray-400 mb-1">Total Users</p>
+            <p className="text-2xl font-semibold text-gray-900">
+              {data?.length}
+            </p>
+          </div>
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+            <p className="text-xs text-gray-400 mb-1">Updated</p>
+            <p className="text-2xl font-semibold text-gray-900">4</p>
+          </div>
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+            <p className="text-xs text-gray-400 mb-1">Deleted</p>
+            <p className="text-2xl font-semibold text-gray-900">2</p>
+          </div>
         </div>
-      </main>
+
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+            <h2 className="text-sm font-semibold text-gray-900">All Users</h2>
+            <span className="text-xs bg-gray-100 text-gray-500 px-3 py-1 rounded-full">
+              10 total
+            </span>
+          </div>
+
+          {/* Table */}
+          <div className="divide-y divide-gray-50">
+            {data?.slice(0, 5).map((user, i) => (
+              <div
+                key={i}
+                className="flex items-center justify-between px-6 py-3.5 hover:bg-gray-50 transition duration-150"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-xl bg-black text-white flex items-center justify-center text-xs font-bold  shrink-0">
+                    {user.name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")
+                      .toUpperCase()
+                      .slice(0, 2)}
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-800">
+                      {user.name}
+                    </p>
+                    <p className="text-xs text-gray-400">{user.email}</p>
+                  </div>
+                </div>
+                <Link
+                  href={`/users/${user?.id}`}
+                  className="text-xs font-medium bg-gray-100 hover:bg-black hover:text-white text-gray-600 px-4 py-1.5 rounded-xl transition duration-150 cursor-pointer"
+                >
+                  View
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
+
+export default page;

@@ -35,7 +35,7 @@ function page() {
 
   return (
     <div className="min-h-screen">
-      <div className="max-w-5xl mx-auto px-6 py-8">
+      <div className="max-w-5xl mx-auto sm:px-6 sm:py-8">
         <div className="mb-8">
           <h1 className="text-xl font-semibold text-gray-900">Dashboard</h1>
           <p className="text-sm text-gray-400 mt-1">

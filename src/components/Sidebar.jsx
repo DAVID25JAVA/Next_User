@@ -11,7 +11,7 @@ function Sidebar() {
 
   return (
     <>
-      <div className="md:hidden pl-5 pr-4 py-3 bg-white border-r border-gray-200">
+      <div className="md:hidden pl-3 pr-4 py-3 bg-white border-r border-gray-200">
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="w-8 h-8 flex flex-col items-center justify-center gap-1.5 cursor-pointer"

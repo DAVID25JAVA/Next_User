@@ -48,7 +48,7 @@ function page() {
 //   console.log(page);
 
   return (
-    <div className="p-5">
+    <div className="sm:p-5">
       <div className="w-full">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
           {userData?.map((i) => (
